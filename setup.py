@@ -8,7 +8,7 @@ with open(os.path.join(HERE, "README.rst")) as f:
 
 
 def get_version():
-    with open("proximity/__init__.py") as f:
+    with open("roughly/__init__.py") as f:
         for line in f:
             if line.startswith("__version__"):
                 return eval(line.split("=")[-1])
@@ -19,7 +19,7 @@ REQUIREMENTS = [
 
 if __name__ == "__main__":
     setup(
-        name="proximity",
+        name="roughly",
         version=get_version(),
         description="approximations for equality testing",
         long_description=README,
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         ],
         author="Joe Cross",
         author_email="joe.mcross@gmail.com",
-        url="https://github.com/numberoverzero/proximity",
+        url="https://github.com/numberoverzero/roughly",
         license="MIT",
         keywords="fuzz fuzzy approx approximate equality",
         platforms="any",

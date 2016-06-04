@@ -1,17 +1,15 @@
-.. image:: https://readthedocs.org/projects/proximity/badge?style=flat-square
-    :target: http://proximity.readthedocs.org/
-.. image:: https://img.shields.io/travis/numberoverzero/proximity/master.svg?style=flat-square
-    :target: https://travis-ci.org/numberoverzero/proximity
-.. image:: https://img.shields.io/coveralls/numberoverzero/proximity/master.svg?style=flat-square
-    :target: https://coveralls.io/github/numberoverzero/proximity
-.. image:: https://img.shields.io/pypi/v/proximity.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/proximity
-.. image:: https://img.shields.io/pypi/status/proximity.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/proximity
-.. image:: https://img.shields.io/github/issues-raw/numberoverzero/proximity.svg?style=flat-square
-    :target: https://github.com/numberoverzero/proximity/issues
-.. image:: https://img.shields.io/pypi/l/proximity.svg?style=flat-square
-    :target: https://github.com/numberoverzero/proximity/blob/master/LICENSE
+.. image:: https://img.shields.io/travis/numberoverzero/roughly/master.svg?style=flat-square
+    :target: https://travis-ci.org/numberoverzero/roughly
+.. image:: https://img.shields.io/coveralls/numberoverzero/roughly/master.svg?style=flat-square
+    :target: https://coveralls.io/github/numberoverzero/roughly
+.. image:: https://img.shields.io/pypi/v/roughly.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/roughly
+.. image:: https://img.shields.io/pypi/status/roughly.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/roughly
+.. image:: https://img.shields.io/github/issues-raw/numberoverzero/roughly.svg?style=flat-square
+    :target: https://github.com/numberoverzero/roughly/issues
+.. image:: https://img.shields.io/pypi/l/roughly.svg?style=flat-square
+    :target: https://github.com/numberoverzero/roughly/blob/master/LICENSE
 
 ``__eq__`` overloading for simpler approximate equality testing
 
@@ -19,7 +17,7 @@ Installation
 ------------
 ::
 
-    pip install proximity
+    pip install roughly
 
 Usage
 -----
@@ -67,7 +65,7 @@ To check that those are effectively equal, we'd need to do the following:
 
 There's a better way.  Leave that ``Range.__eq__`` method alone::
 
-    from proximity.arrow import near
+    from roughly.arrow import near
 
     now = arrow.now()
     a_fraction_later = arrow.now()
@@ -76,10 +74,10 @@ There's a better way.  Leave that ``Range.__eq__`` method alone::
     # Nothing changes here, same pure arrow.Arrow classes
     some_range = Range(now, much_later)
 
-    # Wrap values with proximity, overriding the __eq__ to check intervals
+    # Wrap values with roughly, overriding the __eq__ to check intervals
     same_range = Range(near(a_fraction_later, seconds=1), near(much_later))
 
 
     # Success!  When Range.__eq__ checks self.lower == other.lower,
-    # proximity overrides the arrow.Arrow check with a range check
+    # roughly overrides the arrow.Arrow check with a range check
     assert some_range == same_range
