@@ -53,7 +53,7 @@ class ApproximateDatetime:
             raise RuntimeError("Unknown approximation mode {}".format(mode))
 
 
-def near(arrow, **kwargs):
+def near(arrow, *args, **kwargs):
     return _approximate(arrow, Mode.Within, **kwargs)
 
 
