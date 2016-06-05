@@ -53,7 +53,7 @@ equal?
     # Just barely not equal!
     assert some_range != same_rage
 
-To check that those are effectively equal, we'd need to do the following:
+To check that those are effectively equal, we'd need to do the following::
 
     class Range:
         def __eq__(self, other):
