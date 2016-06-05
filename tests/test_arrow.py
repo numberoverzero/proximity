@@ -54,3 +54,21 @@ def test_near():
     # within 2 minutes will evaluate as equal
     approx = near(now, minutes=2)
     check(approx, nearby, far)
+
+
+def test_both_approximate():
+    """When both are approximate, both get a chance to say they're equal"""
+    now = arrow.now()
+    later = now.replace(seconds=20)
+
+    #            now           later
+    # |-10|-----|0|-----|10|-----|20|---------------|50|
+    #    |---- first -----|
+    #    |--------------------- second ---------------|
+    first = near(now, seconds=10)
+    second = near(later, seconds=30)
+
+    # While first doesn't think second is near,
+    # second DOES think first is near.
+    assert first == second
+    assert second == first

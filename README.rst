@@ -22,65 +22,32 @@ Installation
 Usage
 -----
 
-Normally we could check if an arrow date is near another arrow date with::
+Testing a function that returns ``arrow.now()`` usually looks like this::
 
     import arrow
-    now = arrow.now()
-    a_fraction_later = arrow.now()
-    assert now.replace(seconds=-1) < a_fraction_later < now.replace(seconds=1)
-
-What about when the date is part of two objects that we want to be considered
-equal?
-
-::
-
-    class Range:
-        def __init__(self, lower, upper):
-            self.lower = lower
-            self.upper = upper
-
-        def __eq__(self, other):
-            return (self.lower == other.lower
-                    and self.upper == other.upper)
-
-    now = arrow.now()
-    a_fraction_later = arrow.now()
-    much_later = now.replace(seconds=5)
-
-    some_range = Range(now, much_later)
-    same_range = Range(a_fraction_later, much_later)
-
-    # Just barely not equal!
-    assert some_range != same_rage
-
-To check that those are effectively equal, we'd need to do the following::
-
-    class Range:
-        def __eq__(self, other):
-            near_lower = (self.lower.replace(seconds=-1) < self.other.lower
-                          and other.lower < self.lower.replace(seconds=1))
-            near_upper = (self.upper.replace(seconds=-1) < self.other.upper
-                          and other.upper < self.upper.replace(seconds=1))
-            return near_lower and near_upper
-
-There's a better way.  Leave that ``Range.__eq__`` method alone::
-
-    from roughly.arrow import near
-
-    now = arrow.now()
-    a_fraction_later = arrow.now()
-    much_later = now.replace(seconds=5)
-
-    # Nothing changes here, same pure arrow.Arrow classes
-    some_range = Range(now, much_later)
-
-    # Wrap values with roughly, overriding the __eq__ to check intervals
-    same_range = Range(near(a_fraction_later, seconds=1), near(much_later, seconds=1))
 
 
-    # Success!  When Range.__eq__ checks self.lower == other.lower,
-    # roughly overrides the arrow.Arrow check with a range check
-    assert some_range == same_range
+    def function_under_test():
+        return arrow.now()
+
+
+    def test_function_returns_now():
+        now = arrow.now()
+        actual = function_under_test()
+        assert now.replace(seconds=-2) <= actual <= now.replace(seconds=2)
+
+It gets worse when you want to check two objects that have a datetime field
+that should be approximately equal, but you still want the class's
+``__eq__`` to check exact equality.  There's a better way::
+
+    import arrow
+    import roughly
+
+
+    def test_function_returns_now():
+        now = roughly.near(arrow.now(), seconds=2)
+        assert function_under_test() == now
+
 
 Motivation
 ----------

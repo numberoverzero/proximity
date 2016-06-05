@@ -2,7 +2,7 @@ import arrow
 from .core import Mode
 from . import _arrow
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 __all__ = ["Mode", "near"]
 
 

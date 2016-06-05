@@ -41,16 +41,24 @@ class ApproximateDatetime:
         self.arrow = arrow
 
     def __eq__(self, other):
+        mode = self.arrow._approximate_mode
+        if mode is Mode.Within:
+            # Both are approximates!
+            if isinstance(other, ApproximateDatetime):
+                # Give other a chance to say they're equal
+                if other.approximate_range_check(self.arrow._datetime):
+                    return True
+                # Now self's turn to check
+                other = other.arrow._datetime
+            return self.approximate_range_check(other)
+        else:  # pragma: no cover
+            raise RuntimeError("Unknown approximation mode {}".format(mode))
+
+    def approximate_range_check(self, other: datetime):
         kwargs = self.arrow._approximate_range
         lower = self.arrow.replace(**_negate(kwargs))._datetime
         upper = self.arrow.replace(**kwargs)._datetime
-
-        # Check lower, upper, or both
-        mode = self.arrow._approximate_mode
-        if mode is Mode.Within:
-            return lower < other < upper
-        else:  # pragma: no cover
-            raise RuntimeError("Unknown approximation mode {}".format(mode))
+        return lower < other < upper
 
 
 def near(arrow, *args, **kwargs):
