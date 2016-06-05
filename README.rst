@@ -75,7 +75,7 @@ There's a better way.  Leave that ``Range.__eq__`` method alone::
     some_range = Range(now, much_later)
 
     # Wrap values with roughly, overriding the __eq__ to check intervals
-    same_range = Range(near(a_fraction_later, seconds=1), near(much_later))
+    same_range = Range(near(a_fraction_later, seconds=1), near(much_later, seconds=1))
 
 
     # Success!  When Range.__eq__ checks self.lower == other.lower,

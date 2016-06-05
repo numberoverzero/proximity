@@ -1,12 +1,18 @@
 from .core import Mode
 from datetime import datetime
 from arrow import Arrow, ArrowFactory
-__all__ = ["near", "before", "after"]
+__all__ = ["near"]
+
+
+def _negate(kwargs):
+    return {key: -value for key, value in kwargs.items()}
 
 
 class ApproximateArrow(Arrow):
-    _approximate_range = None
-    _approximate_mode = None
+    def __init__(self, *args, **kwargs):
+        self._approximate_mode = Mode.Exact
+        self._approximate_range = {}
+        super().__init__(*args, **kwargs)
 
     @property
     def datetime(self):
@@ -23,38 +29,28 @@ class ApproximateArrow(Arrow):
 
 
 class ApproximateDatetime:
-    _default_range = {"seconds": 0}
-    _default_mode = Mode.Exact
+    # Is this hacky?  Yep.  On the other hand, it means
+    # we don't accidentally return parts of a datetime that were
+    # assumed strictly equal (say, someone checks that two dates
+    # are within a minute, and then a downstream call assumes
+    # that_arrow.datetime.seconds is exactly equal.
+    # Instead, big failure message for missing attributes.
+    __class__ = datetime
 
     def __init__(self, arrow):
         self.arrow = arrow
 
     def __eq__(self, other):
-        # Arrow does the heavy lifting with type checks here
-        replace_kwargs = dict(getattr(
-            self.arrow, "_approximate_range", self._default_range))
-        lower = self.arrow.replace(**replace_kwargs)
-        upper = self.arrow.replace(**replace_kwargs)
+        kwargs = self.arrow._approximate_range
+        lower = self.arrow.replace(**_negate(kwargs))._datetime
+        upper = self.arrow.replace(**kwargs)._datetime
 
         # Check lower, upper, or both
-        mode = getattr(
-            self.arrow, "_approximate_mode", self._default_mode)
-        if mode is Mode.Before:
-            return other < upper
-        elif mode is Mode.After:
-            return other > lower
-        elif mode is Mode.Within:
+        mode = self.arrow._approximate_mode
+        if mode is Mode.Within:
             return lower < other < upper
-        else:
+        else:  # pragma: no cover
             raise RuntimeError("Unknown approximation mode {}".format(mode))
-
-
-def after(arrow, **kwargs):
-    return _approximate(arrow, Mode.After, **kwargs)
-
-
-def before(arrow, **kwargs):
-    return _approximate(arrow, Mode.Before, **kwargs)
 
 
 def near(arrow, **kwargs):
