@@ -1,6 +1,7 @@
 import arrow
 import pytest
-from roughly import near
+import uuid
+from roughly import near, has_type
 
 
 def test_near_arrow():
@@ -22,3 +23,19 @@ def test_not_implemented():
         near(obj)
     new_issue_url = "https://github.com/numberoverzero/roughly/issues/new"
     assert new_issue_url in str(excinfo.value)
+
+
+def test_has_type_matches():
+    expected_type = uuid.UUID
+    placeholder = has_type(expected_type)
+    value = uuid.uuid4()
+
+    assert placeholder == value
+    assert value == placeholder
+
+
+def test_has_type_fails():
+    placeholder = has_type(int)
+    value = uuid.uuid4()
+    assert placeholder != value
+    assert value != placeholder
