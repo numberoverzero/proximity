@@ -1,7 +1,7 @@
 .. image:: https://img.shields.io/travis/numberoverzero/roughly/master.svg?style=flat-square
     :target: https://travis-ci.org/numberoverzero/roughly
-.. image:: https://img.shields.io/coveralls/numberoverzero/roughly/master.svg?style=flat-square
-    :target: https://coveralls.io/github/numberoverzero/roughly
+.. image:: https://img.shields.io/codecov/c/github/numberoverzero/roughly/master.svg?style=flat-square
+    :target: https://codecov.io/gh/numberoverzero/roughly/branch/master
 .. image:: https://img.shields.io/pypi/v/roughly.svg?style=flat-square
     :target: https://pypi.python.org/pypi/roughly
 .. image:: https://img.shields.io/pypi/status/roughly.svg?style=flat-square
