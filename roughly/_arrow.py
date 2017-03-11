@@ -70,4 +70,6 @@ def _approximate(arrow_instance, mode, **kwargs):
     approx._approximate_range = kwargs
     approx._approximate_mode = mode
     return approx
+
+
 _factory = ArrowFactory(type=ApproximateArrow)
